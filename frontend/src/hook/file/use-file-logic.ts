@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { api } from "@/app/api";
 
 export const useFileLogic = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -6,7 +7,7 @@ export const useFileLogic = () => {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = (selectedFile: File) => {
+  const handleFileSelect = async (selectedFile: File) => {
     setIsLoading(true);
     if (!selectedFile.name.endsWith(".pdf")) {
       alert("PDF 파일만 업로드만 가능해요.");
@@ -20,6 +21,13 @@ export const useFileLogic = () => {
     }
     setFile(selectedFile);
 
+    try {
+      const result = await api.upload(selectedFile);
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    } 
+      
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
