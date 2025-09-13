@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 import logging
 import uvicorn
 
-from src.api.v1 import upload, documents, health
+from src.api.v1 import upload, documents, health, ocr
 from src.core.config import settings
 
 logging.basicConfig(level=logging.INFO)
@@ -43,6 +43,7 @@ app.add_middleware(
 app.include_router(health.router, prefix="/api", tags=["health"])
 app.include_router(upload.router, prefix="/api", tags=["upload"])
 app.include_router(documents.router, prefix="/api/v1", tags=["documents"])
+app.include_router(ocr.router, tags=["ocr"])
 
 
 @app.get("/")

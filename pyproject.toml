@@ -11,10 +11,10 @@ dependencies = [
     "pydantic>=2.5.3",
     "pydantic-settings>=2.1.0",
     # "surya-ocr>=0.4.0",  # Temporarily disabled for Python 3.13 compatibility
-    "Pillow>=10.2.0",
+    "pillow>=10.2.0",
     "pdf2image>=1.17.0",
     "PyPDF2>=3.0.1",
-    "pymupdf>=1.23.8",  # Alternative OCR/PDF processing
+    "pymupdf>=1.23.8", # Alternative OCR/PDF processing
     "sqlalchemy>=2.0.25",
     "psycopg[binary]>=3.2.0",
     "alembic>=1.13.1",
@@ -29,7 +29,11 @@ dependencies = [
     "httpx>=0.26.0",
     "python-jose[cryptography]>=3.3.0",
     "passlib[bcrypt]>=1.7.4",
-    "qdrant-client>=1.7.0",  # Vector database
+    "qdrant-client>=1.7.0", # Vector database
+    "surya-ocr>=0.16.7",
+    "torch>=2.8.0",
+    "torchvision>=0.23.0",
+    "reportlab>=4.4.3",
 ]
 
 [project.optional-dependencies]
