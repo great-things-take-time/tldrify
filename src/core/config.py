@@ -48,6 +48,9 @@ class Settings(BaseSettings):
     # Qdrant
     QDRANT_HOST: str = os.getenv("QDRANT_HOST", "localhost")
     QDRANT_PORT: int = int(os.getenv("QDRANT_PORT", 6333))
+    QDRANT_GRPC_PORT: int = int(os.getenv("QDRANT_GRPC_PORT", 6334))
+    QDRANT_API_KEY: Optional[str] = os.getenv("QDRANT_API_KEY")
+    QDRANT_COLLECTION_NAME: str = os.getenv("QDRANT_COLLECTION_NAME", "tldrify_vectors")
 
     # WebSocket
     WS_MESSAGE_QUEUE_SIZE: int = 100

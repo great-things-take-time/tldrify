@@ -5,6 +5,7 @@ from redis import ConnectionPool
 import json
 import os
 from typing import Optional, Any, Dict
+import asyncio
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -98,6 +99,23 @@ class RedisClient:
         """Get cached embedding from Redis."""
         key = f"embedding:{text_hash}"
         return self.get_json(key)
+
+    # Async methods for compatibility with async code
+    async def get_async(self, key: str) -> Optional[str]:
+        """Async wrapper for get."""
+        return await asyncio.get_event_loop().run_in_executor(None, self.get, key)
+
+    async def set_async(self, key: str, value: Any, ttl: Optional[int] = None) -> bool:
+        """Async wrapper for set with TTL support."""
+        return await asyncio.get_event_loop().run_in_executor(None, self.set, key, value, ttl)
+
+    async def delete_async(self, key: str) -> bool:
+        """Async wrapper for delete."""
+        return await asyncio.get_event_loop().run_in_executor(None, self.delete, key)
+
+    async def exists_async(self, key: str) -> bool:
+        """Async wrapper for exists."""
+        return await asyncio.get_event_loop().run_in_executor(None, self.exists, key)
 
     def ping(self) -> bool:
         """Check Redis connection."""

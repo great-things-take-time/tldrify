@@ -1,0 +1,49 @@
+================================================================================
+DOCUMENT CHUNKS EXPORT
+Document: test_text.pdf
+Document ID: 11
+Total Chunks: 1
+Export Time: 2025-09-13T14:55:04.516806
+Format: simple
+================================================================================
+
+STATISTICS:
+  Total Tokens: 234
+  Average Tokens per Chunk: 234.0
+  Min Tokens: 234
+  Max Tokens: 234
+
+================================================================================
+
+### CHUNK 1/1 ###
+Index: 0
+Tokens: 234
+----------------------------------------
+TLDRify OCR Test Document
+This is a test PDF document created for testing OCR functionality. It contains selectable text that should be extracted by PyMuPDF. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Key Features:
+• Automatic text extraction
+• Multiple language support
+• Layout analysis
+• Confidence scoring
+• Fallback mechanisms
+This document tests the basic text extraction capabilities of our OCR system. Page 2: Technical Details
+OCR Processing Pipeline:
+1. PDF Loading and Validation
+2. Page Extraction
+3. Text Detection
+4. Character Recognition
+5. Post-processing and Cleaning
+6. Confidence Scoring
+7. Result Caching
+Supported Formats:
+- PDF (text-based and scanned)
+- Images (PNG, JPEG, TIFF)
+- Multi-page documents
+Performance Metrics:
+- Processing Speed: < 5 seconds per page
+- Accuracy: > 95% for high-quality documents
+- Memory Usage: Optimized for large documents
+
+================================================================================
