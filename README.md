@@ -1,9 +1,15 @@
-# 📚 tldrify - PDF to Smart Study Guide
+# TLDRify - AI-Powered PDF Learning Platform
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+[![Development Status](https://img.shields.io/badge/Status-Pre--Alpha-orange.svg)]()
+[![PRD Research](https://img.shields.io/badge/PRD-Research%20Complete-blue.svg)](docs/research/prd-research-report.md)
 
 > Transform lengthy PDFs into intelligent, digestible study materials powered by AI
 
 ## 🎯 Vision
-tldrify는 대학생과 연구자들이 방대한 PDF 문서(교재, 논문)를 효율적으로 학습할 수 있도록 돕는 AI 기반 학습 도구입니다.
+TLDRify transforms PDF documents into interactive learning experiences using AI. It combines PDF analysis, automatic question generation, and adaptive learning paths in one seamless workflow.
+
+**Target:** "From document to mastery in 5 minutes"
 
 ## ✨ Core Features
 - 📄 **Smart PDF Processing**: OCR + AI 기반 텍스트 추출

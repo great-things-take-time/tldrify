@@ -13,7 +13,7 @@ PyPDF2==3.0.1
 
 # Database
 sqlalchemy==2.0.25
-psycopg2-binary==2.9.9
+psycopg[binary]>=3.2.0
 alembic==1.13.1
 redis==5.0.1
 

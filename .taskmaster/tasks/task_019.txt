@@ -1,0 +1,11 @@
+# Task ID: 19
+# Title: Build Semantic Text Chunking System
+# Status: pending
+# Dependencies: 18
+# Priority: high
+# Description: Develop intelligent text chunking with 1000-2000 token windows, overlap strategy, and metadata extraction
+# Details:
+Implement semantic chunker in src/core/embeddings/chunker.py using tiktoken for token counting. Create sliding window with 200 token overlap between chunks. Extract document structure using regex patterns for chapters, sections, headings. Implement chunk hierarchy with parent-child relationships. Add metadata to each chunk (page numbers, section titles, position). Create smart splitting that respects sentence and paragraph boundaries. Implement special handling for tables, lists, and code blocks. Add chunk deduplication to remove redundant content. Store chunk relationships in PostgreSQL with foreign keys.
+
+# Test Strategy:
+Verify chunk sizes stay within 1000-2000 token range. Test overlap maintains context between chunks. Validate metadata extraction accuracy. Test hierarchy preservation in database. Ensure no information loss during chunking.

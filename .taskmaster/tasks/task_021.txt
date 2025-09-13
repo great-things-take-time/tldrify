@@ -1,0 +1,11 @@
+# Task ID: 21
+# Title: Implement OpenAI Embedding Generation
+# Status: pending
+# Dependencies: 19, 20
+# Priority: medium
+# Description: Build embedding service with OpenAI text-embedding-3-large, batch processing, and caching strategy
+# Details:
+Create embedding service in src/core/embeddings/encoder.py using OpenAI client. Implement batch processing with 100 texts per request for efficiency. Add exponential backoff retry logic for rate limits. Create embedding cache in Redis with 7-day TTL. Implement dimension reduction from 1536 to 768 using PCA if needed. Add cost tracking per embedding request. Create async processing with Celery for large documents. Implement embedding versioning with model name and parameters. Add fallback to text-embedding-ada-002 for cost optimization.
+
+# Test Strategy:
+Verify embedding dimensions match expected size. Test batch processing with various batch sizes. Validate cache hit ratio above 30%. Test retry logic with simulated rate limits. Measure embedding generation under 2 seconds/chunk target.

@@ -1,0 +1,11 @@
+# Task ID: 18
+# Title: Integrate Surya OCR with Fallback Mechanisms
+# Status: pending
+# Dependencies: 17
+# Priority: high
+# Description: Implement Surya OCR for text extraction with PyMuPDF fallback for simple PDFs and confidence scoring
+# Details:
+Create OCR service in src/core/ocr/surya.py using surya-ocr library. Implement page-by-page processing with PIL for image conversion. Add confidence scoring per page and per document. Create fallback to PyMuPDF for text-based PDFs in src/core/ocr/processor.py. Implement OCR result caching in Redis to avoid reprocessing. Add language detection using langdetect for Korean/English. Create post-processing pipeline for text cleaning, removing artifacts, fixing common OCR errors. Implement parallel processing for multi-page documents using asyncio. Add OCR progress tracking with Celery task updates.
+
+# Test Strategy:
+Benchmark OCR accuracy on test PDFs with ground truth. Test language detection on multilingual documents. Verify fallback mechanism triggers correctly. Test confidence scoring accuracy. Measure processing speed against 5 seconds/page target.

@@ -1,0 +1,11 @@
+# Task ID: 17
+# Title: Implement Chunked File Upload System
+# Status: pending
+# Dependencies: 16
+# Priority: high
+# Description: Build chunked upload API endpoint supporting PDFs up to 100MB with progress tracking and resumable uploads
+# Details:
+Enhance /api/v1/documents/upload endpoint to handle multipart chunked uploads. Implement chunk validation with MD5 checksums. Store temporary chunks in Redis with TTL. Assemble chunks on completion and validate file integrity. Add WebSocket endpoint for real-time upload progress. Implement file type validation using python-magic. Create storage abstraction layer in src/services/storage.py supporting local filesystem and S3. Add virus scanning using ClamAV for security. Implement rate limiting with slowapi to prevent abuse.
+
+# Test Strategy:
+Test chunked upload with files of various sizes (1MB to 100MB). Verify resume capability by simulating network interruptions. Test concurrent uploads from multiple clients. Validate file integrity with checksum comparison. Test rate limiting with excessive requests.

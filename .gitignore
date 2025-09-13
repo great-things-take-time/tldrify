@@ -15,8 +15,15 @@ venv.bak/
 .venv/
 uv.lock
 
+# claude
+.claude/
+
+# MCP
+.mcp.json
+
 # IDE
 .vscode/
+.cursor/
 .idea/
 *.swp
 *.swo
@@ -63,3 +70,24 @@ next-env.d.ts
 .cache/
 tmp/
 temp/
+
+logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dev-debug.log
+# Dependency directories
+# Environment variables
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+# OS specific
+
+# Task files
+# tasks.json
+# tasks/ 

@@ -1,0 +1,73 @@
+name: Update Progress Documentation
+
+on:
+  issues:
+    types: [opened, closed, reopened, assigned]
+  push:
+    paths:
+      - '.taskmaster/tasks/**'
+      - 'docs/**'
+  workflow_dispatch:
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Update README Progress
+      run: |
+        # Count open and closed issues
+        TOTAL_ISSUES=$(gh issue list --repo ${{ github.repository }} --state all --json number | jq length)
+        CLOSED_ISSUES=$(gh issue list --repo ${{ github.repository }} --state closed --json number | jq length)
+        OPEN_ISSUES=$(gh issue list --repo ${{ github.repository }} --state open --json number | jq length)
+        
+        if [ "$TOTAL_ISSUES" -gt 0 ]; then
+          PROGRESS=$((CLOSED_ISSUES * 100 / TOTAL_ISSUES))
+        else
+          PROGRESS=0
+        fi
+        
+        # Update progress badge in README
+        sed -i "s/Progress-[0-9]*%25-/Progress-${PROGRESS}%25-/" README.md
+        
+        # Create progress report
+        cat > docs/progress-report.md << EOF
+        # Development Progress Report
+        
+        Generated: $(date)
+        
+        ## Overall Progress
+        - Total Tasks: ${TOTAL_ISSUES}
+        - Completed: ${CLOSED_ISSUES}
+        - In Progress: ${OPEN_ISSUES}
+        - Progress: ${PROGRESS}%
+        
+        ## Recent Activity
+        $(gh issue list --repo ${{ github.repository }} --state all --limit 5 --json number,title,state,updatedAt | jq -r '.[] | "- [#\(.number)] \(.title) - \(.state) (Updated: \(.updatedAt))"')
+        
+        ## Next Tasks
+        $(gh issue list --repo ${{ github.repository }} --state open --limit 3 --json number,title,labels | jq -r '.[] | "- [#\(.number)] \(.title)"')
+        EOF
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add README.md docs/progress-report.md || true
+        git commit -m "📊 Update progress report" || echo "No changes to commit"
+    
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}

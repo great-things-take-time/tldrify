@@ -1,0 +1,103 @@
+# TLDRify OCR-POC Product Requirements Document
+
+## Project Overview
+Build a proof-of-concept for an intelligent PDF processing pipeline that demonstrates the complete flow from PDF upload to RAG-based question answering. The system will focus on accurate text extraction, semantic understanding, and intelligent retrieval.
+
+## Core Objective
+Implement and validate the technical feasibility of the OCR → Embedding → Vector DB → RAG pipeline with production-ready quality metrics.
+
+## Technical Requirements
+
+### Phase 1: Foundation Infrastructure
+- Setup FastAPI backend with proper project structure and dependency management
+- Configure PostgreSQL database with SQLAlchemy ORM for document metadata storage
+- Implement Redis for caching and session management
+- Setup Docker containers for development environment
+- Create basic health check and monitoring endpoints
+
+### Phase 2: PDF Processing Pipeline
+- Implement chunked file upload system supporting PDFs up to 100MB
+- Integrate Surya OCR for multilingual text extraction
+- Build fallback mechanism using PyMuPDF for simple PDFs
+- Create text post-processing pipeline for cleaning and normalization
+- Implement confidence scoring for OCR quality assessment
+
+### Phase 3: Text Processing and Chunking
+- Develop semantic chunking algorithm with 1000-2000 token chunks
+- Implement overlap strategy to maintain context between chunks
+- Extract document structure metadata (chapters, sections, headings)
+- Build language detection system for multilingual support
+- Create chunk indexing system with parent-child relationships
+
+### Phase 4: Embedding Generation
+- Integrate OpenAI text-embedding-3-large model
+- Implement batch processing for efficient embedding generation
+- Build embedding cache system to avoid redundant API calls
+- Create dimension reduction options for storage optimization
+- Implement embedding versioning for model updates
+
+### Phase 5: Vector Database Integration
+- Setup Qdrant vector database with Docker
+- Design collection schema for document embeddings
+- Implement hybrid search combining vector similarity and BM25
+- Create metadata filtering for targeted searches
+- Build index management system for performance optimization
+
+### Phase 6: RAG Implementation
+- Develop context retrieval system with relevance scoring
+- Implement query expansion for better retrieval accuracy
+- Build prompt engineering templates for different query types
+- Create response generation with source citations
+- Implement conversation memory for multi-turn interactions
+
+### Phase 7: API Development
+- Design RESTful API endpoints for all operations
+- Implement async processing with Celery for long-running tasks
+- Create WebSocket support for real-time progress updates
+- Build comprehensive error handling and retry mechanisms
+- Generate OpenAPI documentation with examples
+
+### Phase 8: Testing and Validation
+- Create comprehensive test suite with pytest
+- Implement OCR accuracy benchmarking system
+- Build retrieval accuracy measurement tools
+- Create performance profiling for bottleneck identification
+- Develop end-to-end integration tests
+
+## Success Criteria
+- OCR accuracy > 95% on standard academic PDFs
+- Text extraction speed < 5 seconds per page
+- Embedding generation < 2 seconds per chunk
+- RAG query response time < 3 seconds
+- Retrieval accuracy > 85% for relevant chunks
+- System handles 10 concurrent users without degradation
+- 99% uptime during testing period
+
+## Technical Constraints
+- Must support Korean and English languages
+- Must handle scanned PDFs with varying quality
+- Must work within OpenAI API rate limits
+- Must maintain data privacy and security standards
+- Must be deployable on standard cloud infrastructure
+
+## Deliverables
+- Fully functional OCR-POC backend API
+- Docker compose setup for local development
+- Comprehensive API documentation
+- Performance benchmark reports
+- Test coverage report > 80%
+- Deployment guide and configuration files
+
+## Development Priorities
+1. Core OCR pipeline must be rock-solid
+2. Embedding quality is critical for retrieval accuracy
+3. RAG responses must include accurate citations
+4. System must be observable with proper logging
+5. API must be well-documented and testable
+
+## Risk Mitigation
+- Implement multiple OCR fallback options
+- Cache embeddings aggressively to reduce costs
+- Use connection pooling for database efficiency
+- Implement circuit breakers for external services
+- Create comprehensive error recovery mechanisms

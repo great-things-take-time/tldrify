@@ -1,0 +1,141 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 16,
+        "title": "Setup Database Infrastructure with Docker",
+        "description": "Configure PostgreSQL and Redis databases with Docker Compose, implement SQLAlchemy models for document metadata, and setup Alembic for database migrations",
+        "details": "Create docker-compose.yml with PostgreSQL 15, Redis 7, and Qdrant services. Define SQLAlchemy models in src/db/models.py for documents (id, filename, upload_date, status, page_count, file_size, ocr_confidence), chunks (id, document_id, text, start_page, end_page, metadata), and processing_jobs (id, document_id, status, created_at, completed_at, error_message). Configure Alembic with initial migration for tables. Setup connection pooling with SQLAlchemy async engine using asyncpg. Implement Redis client wrapper in src/db/redis.py for caching with connection pool and retry logic.",
+        "testStrategy": "Test database connections with health check endpoints. Verify table creation with Alembic migrations. Test connection pooling under load with concurrent requests. Validate Redis caching with get/set operations. Ensure proper rollback on transaction failures.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "Implement Chunked File Upload System",
+        "description": "Build chunked upload API endpoint supporting PDFs up to 100MB with progress tracking and resumable uploads",
+        "details": "Enhance /api/v1/documents/upload endpoint to handle multipart chunked uploads. Implement chunk validation with MD5 checksums. Store temporary chunks in Redis with TTL. Assemble chunks on completion and validate file integrity. Add WebSocket endpoint for real-time upload progress. Implement file type validation using python-magic. Create storage abstraction layer in src/services/storage.py supporting local filesystem and S3. Add virus scanning using ClamAV for security. Implement rate limiting with slowapi to prevent abuse.",
+        "testStrategy": "Test chunked upload with files of various sizes (1MB to 100MB). Verify resume capability by simulating network interruptions. Test concurrent uploads from multiple clients. Validate file integrity with checksum comparison. Test rate limiting with excessive requests.",
+        "priority": "high",
+        "dependencies": [
+          16
+        ],
+        "status": "in-progress",
+        "subtasks": []
+      },
+      {
+        "id": 18,
+        "title": "Integrate Surya OCR with Fallback Mechanisms",
+        "description": "Implement Surya OCR for text extraction with PyMuPDF fallback for simple PDFs and confidence scoring",
+        "details": "Create OCR service in src/core/ocr/surya.py using surya-ocr library. Implement page-by-page processing with PIL for image conversion. Add confidence scoring per page and per document. Create fallback to PyMuPDF for text-based PDFs in src/core/ocr/processor.py. Implement OCR result caching in Redis to avoid reprocessing. Add language detection using langdetect for Korean/English. Create post-processing pipeline for text cleaning, removing artifacts, fixing common OCR errors. Implement parallel processing for multi-page documents using asyncio. Add OCR progress tracking with Celery task updates.",
+        "testStrategy": "Benchmark OCR accuracy on test PDFs with ground truth. Test language detection on multilingual documents. Verify fallback mechanism triggers correctly. Test confidence scoring accuracy. Measure processing speed against 5 seconds/page target.",
+        "priority": "high",
+        "dependencies": [
+          17
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 19,
+        "title": "Build Semantic Text Chunking System",
+        "description": "Develop intelligent text chunking with 1000-2000 token windows, overlap strategy, and metadata extraction",
+        "details": "Implement semantic chunker in src/core/embeddings/chunker.py using tiktoken for token counting. Create sliding window with 200 token overlap between chunks. Extract document structure using regex patterns for chapters, sections, headings. Implement chunk hierarchy with parent-child relationships. Add metadata to each chunk (page numbers, section titles, position). Create smart splitting that respects sentence and paragraph boundaries. Implement special handling for tables, lists, and code blocks. Add chunk deduplication to remove redundant content. Store chunk relationships in PostgreSQL with foreign keys.",
+        "testStrategy": "Verify chunk sizes stay within 1000-2000 token range. Test overlap maintains context between chunks. Validate metadata extraction accuracy. Test hierarchy preservation in database. Ensure no information loss during chunking.",
+        "priority": "high",
+        "dependencies": [
+          18
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 20,
+        "title": "Setup Qdrant Vector Database",
+        "description": "Configure Qdrant for vector storage with collections, indexing strategies, and hybrid search capabilities",
+        "details": "Deploy Qdrant using Docker with persistent volume for data. Create vector client in src/db/vector.py with connection pooling. Design collection schema with 1536 dimensions for text-embedding-3-large. Configure HNSW index with ef_construction=128, m=16 for optimal performance. Implement collection versioning for embedding model updates. Add metadata filtering for document_id, language, section_type. Setup backup strategy with scheduled snapshots. Implement collection aliases for blue-green deployments. Add monitoring metrics for search latency and index size.",
+        "testStrategy": "Test vector insertion and retrieval accuracy. Benchmark search performance with 100K+ vectors. Verify metadata filtering works correctly. Test collection backup and restore. Validate index performance under concurrent queries.",
+        "priority": "medium",
+        "dependencies": [
+          16
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 21,
+        "title": "Implement OpenAI Embedding Generation",
+        "description": "Build embedding service with OpenAI text-embedding-3-large, batch processing, and caching strategy",
+        "details": "Create embedding service in src/core/embeddings/encoder.py using OpenAI client. Implement batch processing with 100 texts per request for efficiency. Add exponential backoff retry logic for rate limits. Create embedding cache in Redis with 7-day TTL. Implement dimension reduction from 1536 to 768 using PCA if needed. Add cost tracking per embedding request. Create async processing with Celery for large documents. Implement embedding versioning with model name and parameters. Add fallback to text-embedding-ada-002 for cost optimization.",
+        "testStrategy": "Verify embedding dimensions match expected size. Test batch processing with various batch sizes. Validate cache hit ratio above 30%. Test retry logic with simulated rate limits. Measure embedding generation under 2 seconds/chunk target.",
+        "priority": "medium",
+        "dependencies": [
+          19,
+          20
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 22,
+        "title": "Build RAG Retrieval and Generation System",
+        "description": "Implement context retrieval with relevance scoring, query expansion, and response generation with citations",
+        "details": "Create retriever in src/core/rag/retriever.py with hybrid search combining vector similarity and BM25. Implement query expansion using synonyms and related terms. Add relevance scoring with cosine similarity threshold of 0.7. Create context window management limiting to 8000 tokens. Build prompt templates in src/core/rag/generator.py for different query types. Implement response generation with GPT-4 including source citations. Add conversation memory using Redis for multi-turn interactions. Create answer confidence scoring based on retrieval scores. Implement streaming responses for better UX.",
+        "testStrategy": "Test retrieval accuracy with known question-answer pairs. Verify citation accuracy matches source chunks. Test conversation memory across multiple turns. Validate response time under 3 seconds. Measure retrieval precision and recall metrics.",
+        "priority": "medium",
+        "dependencies": [
+          21
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 23,
+        "title": "Setup Celery Task Queue with Monitoring",
+        "description": "Configure Celery for async processing with Redis broker, task routing, and Flower monitoring dashboard",
+        "details": "Configure Celery app in src/services/celery_app.py with Redis as broker and backend. Create task routing for OCR (ocr_queue), embeddings (embedding_queue), and general tasks. Implement task priorities with multiple worker pools. Setup Flower dashboard for monitoring on port 5555. Create custom tasks for document processing pipeline. Add task retry logic with exponential backoff. Implement task chaining for sequential processing. Setup periodic tasks for cleanup and maintenance. Add dead letter queue for failed tasks. Configure result backend with 24-hour TTL.",
+        "testStrategy": "Test task execution and result retrieval. Verify task routing to correct queues. Test retry mechanism with failing tasks. Monitor queue lengths under load. Validate Flower dashboard displays correct metrics.",
+        "priority": "medium",
+        "dependencies": [
+          16
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 24,
+        "title": "Develop Comprehensive API Endpoints",
+        "description": "Build RESTful API with versioning, authentication, error handling, and OpenAPI documentation",
+        "details": "Organize API routes in src/api/v1/ with separate modules per resource. Implement JWT authentication with refresh tokens. Add request validation using Pydantic models. Create comprehensive error handling with custom exceptions. Implement rate limiting per endpoint with different tiers. Add request/response logging with correlation IDs. Generate OpenAPI documentation with examples and schemas. Create health check endpoints for each service dependency. Implement API versioning strategy with deprecation notices. Add CORS configuration for frontend integration.",
+        "testStrategy": "Test all CRUD operations for each resource. Verify JWT authentication and authorization. Test rate limiting with burst requests. Validate OpenAPI schema generation. Test error responses with various failure scenarios.",
+        "priority": "low",
+        "dependencies": [
+          22,
+          23
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 25,
+        "title": "Implement Testing Suite and Benchmarking",
+        "description": "Create comprehensive test coverage with pytest, performance benchmarks, and CI/CD integration",
+        "details": "Setup pytest with fixtures for database, Redis, and API client. Create unit tests achieving 80% code coverage. Implement integration tests for complete workflows. Add performance benchmarks in tests/benchmarks/ for OCR speed, embedding generation, and RAG queries. Create load testing with Locust for concurrent users. Implement OCR accuracy testing with ground truth PDFs. Setup GitHub Actions for CI/CD with test automation. Add pre-commit hooks for code quality (black, ruff, mypy). Create test data generators for various document types. Implement contract testing for API endpoints.",
+        "testStrategy": "Run full test suite in under 5 minutes. Verify code coverage meets 80% target. Test performance benchmarks meet SLA requirements. Validate CI/CD pipeline catches breaking changes. Ensure all quality checks pass before merge.",
+        "priority": "low",
+        "dependencies": [
+          24
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-08-26T01:03:49.551Z",
+      "updated": "2025-09-13T12:59:06.089Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

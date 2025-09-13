@@ -1,0 +1,71 @@
+name: Sync Task Master with GitHub Issues
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Run every 6 hours
+  workflow_dispatch:
+
+jobs:
+  sync-tasks:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install Task Master
+      run: npm install -g task-master-ai
+    
+    - name: Sync Issue Status to Task Master
+      run: |
+        # Get all issues and their status
+        gh issue list --repo ${{ github.repository }} --state all --json number,state,title --limit 100 > issues.json
+        
+        # Update Task Master tasks based on Issue status
+        while IFS= read -r issue; do
+          ISSUE_NUM=$(echo "$issue" | jq -r '.number')
+          ISSUE_STATE=$(echo "$issue" | jq -r '.state')
+          
+          # Extract Task Master ID from title if present
+          if echo "$issue" | jq -r '.title' | grep -q '\[Task [0-9]\+\]'; then
+            TASK_ID=$(echo "$issue" | jq -r '.title' | sed -n 's/.*\[Task \([0-9]\+\)\].*/\1/p')
+            
+            # Update task status based on issue state
+            if [ "$ISSUE_STATE" = "CLOSED" ]; then
+              tm set-status $TASK_ID completed || true
+            elif [ "$ISSUE_STATE" = "OPEN" ]; then
+              # Check if assigned (in progress) or not (pending)
+              ASSIGNEES=$(gh issue view $ISSUE_NUM --repo ${{ github.repository }} --json assignees | jq '.assignees | length')
+              if [ "$ASSIGNEES" -gt 0 ]; then
+                tm set-status $TASK_ID in-progress || true
+              else
+                tm set-status $TASK_ID pending || true
+              fi
+            fi
+          fi
+        done < <(cat issues.json | jq -c '.[]')
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Generate Task Report
+      run: |
+        tm tasks --format json > .taskmaster/reports/github-sync.json
+        tm tasks > docs/task-status.md
+    
+    - name: Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .taskmaster/reports/github-sync.json docs/task-status.md || true
+        git commit -m "🔄 Sync Task Master with GitHub Issues" || echo "No changes to commit"
+    
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}

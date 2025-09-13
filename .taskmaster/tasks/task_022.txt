@@ -1,0 +1,11 @@
+# Task ID: 22
+# Title: Build RAG Retrieval and Generation System
+# Status: pending
+# Dependencies: 21
+# Priority: medium
+# Description: Implement context retrieval with relevance scoring, query expansion, and response generation with citations
+# Details:
+Create retriever in src/core/rag/retriever.py with hybrid search combining vector similarity and BM25. Implement query expansion using synonyms and related terms. Add relevance scoring with cosine similarity threshold of 0.7. Create context window management limiting to 8000 tokens. Build prompt templates in src/core/rag/generator.py for different query types. Implement response generation with GPT-4 including source citations. Add conversation memory using Redis for multi-turn interactions. Create answer confidence scoring based on retrieval scores. Implement streaming responses for better UX.
+
+# Test Strategy:
+Test retrieval accuracy with known question-answer pairs. Verify citation accuracy matches source chunks. Test conversation memory across multiple turns. Validate response time under 3 seconds. Measure retrieval precision and recall metrics.

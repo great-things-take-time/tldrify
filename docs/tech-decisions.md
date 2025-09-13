@@ -20,7 +20,7 @@
 
 ### Backend Framework
 **Decision**: FastAPI
-**Date**: 2025-01-27
+**Date**: 2025-08-27
 **Status**: 🟢 Confirmed
 **Alternatives Considered**: Django, Flask, Express.js
 **Reason**: 
@@ -41,7 +41,7 @@
 
 ### OCR Engine
 **Decision**: Surya (Open Source) → LLMWhisperer (Phase 2)
-**Date**: 2025-01-27
+**Date**: 2025-08-27
 **Status**: 🟡 Testing
 **Alternatives Considered**: 
 - Tesseract OCR
@@ -66,7 +66,7 @@
 
 ### Text Chunking Strategy
 **Decision**: Semantic Chunking with LangChain
-**Date**: 2025-01-27
+**Date**: 2025-08-27
 **Status**: 🟢 Confirmed
 **Alternatives Considered**:
 - Fixed-size chunks (1000 tokens)
@@ -89,7 +89,7 @@
 
 ### LLM Provider
 **Decision**: OpenAI GPT-4 (primary) + Claude 3 (fallback)
-**Date**: 2025-01-27
+**Date**: 2025-08-27
 **Status**: 🟢 Confirmed
 **Alternatives Considered**:
 - Local LLMs (Llama 3, Mistral)
@@ -108,7 +108,7 @@
 
 ### Vector Database
 **Decision**: Pinecone (managed)
-**Date**: 2025-01-27
+**Date**: 2025-08-27
 **Status**: 🟡 Testing
 **Alternatives Considered**:
 - Weaviate
@@ -132,7 +132,7 @@
 
 ### Primary Database
 **Decision**: PostgreSQL 15
-**Date**: 2025-01-27
+**Date**: 2025-08-27
 **Status**: 🟢 Confirmed
 **Alternatives Considered**:
 - MongoDB
@@ -152,7 +152,7 @@
 
 ### Caching Layer
 **Decision**: Redis
-**Date**: 2025-01-27
+**Date**: 2025-08-27
 **Status**: 🟢 Confirmed
 **Alternatives Considered**:
 - Memcached
@@ -171,7 +171,7 @@
 
 ### Task Queue
 **Decision**: Celery + Redis
-**Date**: 2025-01-27
+**Date**: 2025-08-27
 **Status**: 🟢 Confirmed
 **Alternatives Considered**:
 - RQ (Redis Queue)
@@ -195,7 +195,7 @@
 
 ### Framework
 **Decision**: Next.js 14 (App Router)
-**Date**: 2025-01-27
+**Date**: 2025-08-27
 **Status**: 🟢 Confirmed
 **Alternatives Considered**:
 - React SPA (Vite)
@@ -217,7 +217,7 @@
 
 ### UI Library
 **Decision**: shadcn/ui + Tailwind CSS
-**Date**: 2025-01-27
+**Date**: 2025-08-27
 **Status**: 🟢 Confirmed
 **Alternatives Considered**:
 - Material-UI
@@ -239,7 +239,7 @@
 
 ### State Management
 **Decision**: Zustand + React Query
-**Date**: 2025-01-27
+**Date**: 2025-08-27
 **Status**: 🟢 Confirmed
 **Alternatives Considered**:
 - Redux Toolkit
@@ -263,7 +263,7 @@
 
 ### Container Platform
 **Decision**: Docker + Docker Compose
-**Date**: 2025-01-27
+**Date**: 2025-08-27
 **Status**: 🟢 Confirmed
 **Alternatives Considered**:
 - Podman
@@ -282,7 +282,7 @@
 
 ### Cloud Provider
 **Decision**: AWS (primary) with multi-cloud ready
-**Date**: 2025-01-27
+**Date**: 2025-08-27
 **Status**: 🟡 Testing
 **Alternatives Considered**:
 - Google Cloud Platform
@@ -302,7 +302,7 @@
 
 ### CI/CD
 **Decision**: GitHub Actions
-**Date**: 2025-01-27
+**Date**: 2025-08-27
 **Status**: 🟢 Confirmed
 **Alternatives Considered**:
 - GitLab CI
@@ -326,7 +326,7 @@
 
 ### Authentication
 **Decision**: NextAuth.js (Auth.js)
-**Date**: 2025-01-27
+**Date**: 2025-08-27
 **Status**: 🟡 Testing
 **Alternatives Considered**:
 - Clerk
@@ -350,7 +350,7 @@
 
 ### APM & Logging
 **Decision**: Sentry + CloudWatch
-**Date**: 2025-01-27
+**Date**: 2025-08-27
 **Status**: 🟡 Testing
 **Alternatives Considered**:
 - DataDog
@@ -387,5 +387,5 @@
 
 ---
 
-*Last Updated: 2025-01-27*
+*Last Updated: 2025-08-27*
 *Review Schedule: Weekly with tech team*

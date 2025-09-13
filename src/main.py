@@ -1,60 +1,64 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+"""TLDRify FastAPI Application."""
+
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from typing import Optional
+from contextlib import asynccontextmanager
+import logging
 import uvicorn
-from pathlib import Path
-import os
+
+from src.api.v1 import upload, documents, health
+from src.core.config import settings
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifespan events."""
+    logger.info("Starting TLDRify API...")
+    # Startup
+    yield
+    # Shutdown
+    logger.info("Shutting down TLDRify API...")
+
 
 app = FastAPI(
-    title="tldrify API",
-    description="Transform PDFs into intelligent study materials",
-    version="0.1.0"
+    title="TLDRify API",
+    description="AI-Powered PDF Learning Platform",
+    version=settings.APP_VERSION,
+    lifespan=lifespan,
 )
 
+# CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:3000", "http://localhost:3001", "*"],  # Frontend URLs
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-UPLOAD_DIR = Path("uploads")
-UPLOAD_DIR.mkdir(exist_ok=True)
+# Include routers
+app.include_router(health.router, prefix="/api", tags=["health"])
+app.include_router(upload.router, prefix="/api", tags=["upload"])
+app.include_router(documents.router, prefix="/api/v1", tags=["documents"])
+
 
 @app.get("/")
 async def root():
+    """Root endpoint."""
     return {
-        "name": "tldrify",
-        "version": "0.1.0",
-        "status": "running"
+        "message": "Welcome to TLDRify API",
+        "version": settings.APP_VERSION,
+        "docs": "/docs"
     }
 
-@app.post("/api/upload")
-async def upload_pdf(file: UploadFile = File(...)):
-    if not file.filename.endswith('.pdf'):
-        raise HTTPException(status_code=400, detail="Only PDF files are allowed")
-    
-    if file.size > 50 * 1024 * 1024:  # 50MB limit
-        raise HTTPException(status_code=400, detail="File size exceeds 50MB limit")
-    
-    file_path = UPLOAD_DIR / file.filename
-    
-    with open(file_path, "wb") as f:
-        content = await file.read()
-        f.write(content)
-    
-    return JSONResponse(content={
-        "message": "File uploaded successfully",
-        "filename": file.filename,
-        "size": len(content),
-        "path": str(file_path)
-    })
-
-@app.get("/api/health")
-async def health_check():
-    return {"status": "healthy"}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(
+        "src.main:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=True
+    )

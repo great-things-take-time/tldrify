@@ -1,0 +1,11 @@
+# Task ID: 20
+# Title: Setup Qdrant Vector Database
+# Status: pending
+# Dependencies: 16
+# Priority: medium
+# Description: Configure Qdrant for vector storage with collections, indexing strategies, and hybrid search capabilities
+# Details:
+Deploy Qdrant using Docker with persistent volume for data. Create vector client in src/db/vector.py with connection pooling. Design collection schema with 1536 dimensions for text-embedding-3-large. Configure HNSW index with ef_construction=128, m=16 for optimal performance. Implement collection versioning for embedding model updates. Add metadata filtering for document_id, language, section_type. Setup backup strategy with scheduled snapshots. Implement collection aliases for blue-green deployments. Add monitoring metrics for search latency and index size.
+
+# Test Strategy:
+Test vector insertion and retrieval accuracy. Benchmark search performance with 100K+ vectors. Verify metadata filtering works correctly. Test collection backup and restore. Validate index performance under concurrent queries.

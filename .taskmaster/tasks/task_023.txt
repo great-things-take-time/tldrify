@@ -1,0 +1,11 @@
+# Task ID: 23
+# Title: Setup Celery Task Queue with Monitoring
+# Status: pending
+# Dependencies: 16
+# Priority: medium
+# Description: Configure Celery for async processing with Redis broker, task routing, and Flower monitoring dashboard
+# Details:
+Configure Celery app in src/services/celery_app.py with Redis as broker and backend. Create task routing for OCR (ocr_queue), embeddings (embedding_queue), and general tasks. Implement task priorities with multiple worker pools. Setup Flower dashboard for monitoring on port 5555. Create custom tasks for document processing pipeline. Add task retry logic with exponential backoff. Implement task chaining for sequential processing. Setup periodic tasks for cleanup and maintenance. Add dead letter queue for failed tasks. Configure result backend with 24-hour TTL.
+
+# Test Strategy:
+Test task execution and result retrieval. Verify task routing to correct queues. Test retry mechanism with failing tasks. Monitor queue lengths under load. Validate Flower dashboard displays correct metrics.

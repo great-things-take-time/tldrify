@@ -1,0 +1,11 @@
+# Task ID: 16
+# Title: Setup Database Infrastructure with Docker
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Configure PostgreSQL and Redis databases with Docker Compose, implement SQLAlchemy models for document metadata, and setup Alembic for database migrations
+# Details:
+Create docker-compose.yml with PostgreSQL 15, Redis 7, and Qdrant services. Define SQLAlchemy models in src/db/models.py for documents (id, filename, upload_date, status, page_count, file_size, ocr_confidence), chunks (id, document_id, text, start_page, end_page, metadata), and processing_jobs (id, document_id, status, created_at, completed_at, error_message). Configure Alembic with initial migration for tables. Setup connection pooling with SQLAlchemy async engine using asyncpg. Implement Redis client wrapper in src/db/redis.py for caching with connection pool and retry logic.
+
+# Test Strategy:
+Test database connections with health check endpoints. Verify table creation with Alembic migrations. Test connection pooling under load with concurrent requests. Validate Redis caching with get/set operations. Ensure proper rollback on transaction failures.
