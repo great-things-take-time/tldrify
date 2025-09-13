@@ -9,7 +9,7 @@ import json
 
 from .surya import SuryaOCR
 from .pymupdf_fallback import PyMuPDFFallback
-from ...db.redis import redis_client
+from ...db.redis_client import redis_client
 
 logger = logging.getLogger(__name__)
 
