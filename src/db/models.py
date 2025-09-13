@@ -2,9 +2,8 @@
 
 from sqlalchemy import (
     Column, String, Integer, Text, DateTime, Float, Boolean,
-    ForeignKey, JSON, Index, Enum as SQLEnum, UniqueConstraint
+    JSON, Index, Enum as SQLEnum, UniqueConstraint
 )
-from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from datetime import datetime
 import enum
@@ -41,9 +40,7 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-    # Logical relationships (no physical FK constraints)
-    documents = relationship("Document", back_populates="user", foreign_keys="Document.user_id")
-    queries = relationship("Query", back_populates="user", foreign_keys="Query.user_id")
+    # Note: No ORM relationships - using logical FK only
 
 
 class Document(Base):
@@ -77,11 +74,7 @@ class Document(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-    # Logical relationships (no physical FK constraints)
-    user = relationship("User", back_populates="documents", foreign_keys=[user_id])
-    chunks = relationship("TextChunk", back_populates="document", foreign_keys="TextChunk.document_id")
-    ocr_results = relationship("OCRResult", back_populates="document", foreign_keys="OCRResult.document_id")
-    summaries = relationship("Summary", back_populates="document", foreign_keys="Summary.document_id")
+    # Note: No ORM relationships - using logical FK only
 
     # Indexes
     __table_args__ = (
@@ -109,8 +102,7 @@ class OCRResult(Base):
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # Logical relationships (no physical FK constraints)
-    document = relationship("Document", back_populates="ocr_results", foreign_keys=[document_id])
+    # Note: No ORM relationships - using logical FK only
 
     # Indexes
     __table_args__ = (
@@ -152,9 +144,7 @@ class TextChunk(Base):
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # Logical relationships (no physical FK constraints)
-    document = relationship("Document", back_populates="chunks", foreign_keys=[document_id])
-    parent_chunk = relationship("TextChunk", remote_side=[id], foreign_keys=[parent_chunk_id])
+    # Note: No ORM relationships - using logical FK only
 
     # Indexes
     __table_args__ = (
@@ -183,8 +173,7 @@ class Summary(Base):
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # Logical relationships (no physical FK constraints)
-    document = relationship("Document", back_populates="summaries", foreign_keys=[document_id])
+    # Note: No ORM relationships - using logical FK only
 
     # Indexes
     __table_args__ = (
@@ -220,8 +209,7 @@ class Query(Base):
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
-    # Logical relationships (no physical FK constraints)
-    user = relationship("User", back_populates="queries", foreign_keys=[user_id])
+    # Note: No ORM relationships - using logical FK only
 
     # Indexes
     __table_args__ = (
