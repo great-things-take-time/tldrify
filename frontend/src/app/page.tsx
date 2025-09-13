@@ -15,16 +15,22 @@ export default function Home() {
     handleFileSelect,
     fileInputRef,
     resetFile,
+    uploadProgress,
+    uploadStatus,
+    error,
   } = useFileLogic();
 
   return (
     <div>
-      {file ? (
+      {file && uploadStatus === 'completed' ? (
         <FileRenderer file={file} resetFile={resetFile} />
       ) : (
         <FileUploader
           isLoading={isLoading}
           isDragging={isDragging}
+          uploadProgress={uploadProgress}
+          uploadStatus={uploadStatus}
+          error={error}
           handleDragOver={handleDragOver}
           handleDragLeave={handleDragLeave}
           handleDrop={handleDrop}
